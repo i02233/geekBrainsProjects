@@ -4,8 +4,8 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class MainClass {
-    public static int SIZE = 3;
-    public static int DOTS_TO_WIN = 3;
+    public static int SIZE = 5;
+    public static int DOTS_TO_WIN = 4;
     public static final char DOT_EMPTY = '*';
     public static final char DOT_X = 'X';
     public static final char DOT_0 = '0';
@@ -43,7 +43,7 @@ public class MainClass {
     }
 
     public static void initMap(){
-        map = new char [SIZE][SIZE];
+        map = new char[SIZE][SIZE];
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
                 map[i][j] = DOT_EMPTY;
@@ -101,15 +101,29 @@ public class MainClass {
         map[y][x] = DOT_0;
     }
 
-    public static boolean checkWin(char symb){
-        if(map[0][0] == symb && map[0][1] == symb && map[0][2] == symb) return true;
-        if(map[1][0] == symb && map[1][1] == symb && map[1][2] == symb) return true;
-        if(map[2][0] == symb && map[2][1] == symb && map[2][2] == symb) return true;
-        if(map[0][0] == symb && map[1][0] == symb && map[2][0] == symb) return true;
-        if(map[0][1] == symb && map[1][1] == symb && map[2][1] == symb) return true;
-        if(map[0][2] == symb && map[1][2] == symb && map[2][2] == symb) return true;
-        if(map[0][0] == symb && map[1][1] == symb && map[2][2] == symb) return true;
-        if(map[2][0] == symb && map[1][1] == symb && map[0][2] == symb) return true;
+    public static boolean checkLine(int startX, int startY, int dx, int dy, char sign) {
+        for (int i = 0; i < DOTS_TO_WIN; i++) {
+            if(map[startX + i * dx][startY + i * dy] != sign)
+                return false;
+        }
+        return true;
+    }
+
+    public static boolean checkWin(char sign){
+        for (int i = 0; i < DOTS_TO_WIN; i++) {
+            for (int j = 0; j <= (SIZE - DOTS_TO_WIN); j++) {
+                if (checkLine(i, j, 0, 1, sign)) return true;
+                if (checkLine(j, i, 1, 0, sign)) return true;
+
+                if(checkLine(0, j, 1, 1, sign)) return true;
+                if(checkLine(j, 0, 1, 1, sign)) return true;
+                if(checkLine(j, j, 1, 1, sign)) return true;
+
+                if(checkLine(0, SIZE - 1 - j, 1, -1, sign)) return true;
+                if(checkLine(j, SIZE - 1 - 0, 1, -1, sign)) return true;
+                if(checkLine(j, SIZE - 1 - j, 1, -1, sign)) return true;
+            }
+        }
         return false;
     }
 }
