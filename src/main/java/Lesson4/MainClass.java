@@ -16,10 +16,31 @@ public class MainClass {
     public static void main(String[] args) {
         initMap();
         printMap();
-        humanTurn();
-        printMap();
-    }
+        while (true) {
+            humanTurn();
+            printMap();
+            if (checkWin(DOT_X)){
+                System.out.println("Победил человек");
+                break;
+            }
+            if (isMapFull()) {
+                System.out.println("Ничья");
+                break;
+            }
+            aiTurn();
+            printMap();
+            if (checkWin(DOT_0)){
+                System.out.println("Победил Искуственный Интеллект");
+                break;
+            }
+            if (isMapFull()){
+                System.out.println("Ничья");
+                break;
+            }
+        }
 
+
+    }
 
     public static void initMap(){
         map = new char [SIZE][SIZE];
@@ -61,4 +82,34 @@ public class MainClass {
         return false;
     }
 
+    public static boolean isMapFull () {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (map[i][j] == DOT_EMPTY) return false;
+            }
+        }
+        return true;
+    }
+
+    public static void aiTurn() {
+        int x, y;
+        do{
+            x = rand.nextInt(SIZE);
+            y = rand.nextInt(SIZE);
+        } while (!isCellValid(x, y));
+        System.out.println("Компьютер походил в точку " + (x + 1) + " " + (y + 1));
+        map[y][x] = DOT_0;
+    }
+
+    public static boolean checkWin(char symb){
+        if(map[0][0] == symb && map[0][1] == symb && map[0][2] == symb) return true;
+        if(map[1][0] == symb && map[1][1] == symb && map[1][2] == symb) return true;
+        if(map[2][0] == symb && map[2][1] == symb && map[2][2] == symb) return true;
+        if(map[0][0] == symb && map[1][0] == symb && map[2][0] == symb) return true;
+        if(map[0][1] == symb && map[1][1] == symb && map[2][1] == symb) return true;
+        if(map[0][2] == symb && map[1][2] == symb && map[2][2] == symb) return true;
+        if(map[0][0] == symb && map[1][1] == symb && map[2][2] == symb) return true;
+        if(map[2][0] == symb && map[1][1] == symb && map[0][2] == symb) return true;
+        return false;
+    }
 }
